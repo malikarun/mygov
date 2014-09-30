@@ -1,5 +1,9 @@
 <ion-view title="Discuss">
-  <ion-content class="padding">
-    <h1>Discuss</h1>
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="group in groups" type="item-text-wrap" href="#/tab/discuss/{{group.id}}">
+        {{group.name}}
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

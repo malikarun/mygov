@@ -1,5 +1,9 @@
 <ion-view title="Groups">
-  <ion-content class="padding">
-    <h1>Groups</h1>
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="group in groups" type="item-text-wrap" ui-sref="#/tab/group/{{group.id}}">
+        {{group.name}}
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

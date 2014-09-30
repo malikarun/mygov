@@ -1,0 +1,9 @@
+<ion-view title="Tasks">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="group in groups" type="item-text-wrap" href="#/tab/tasks/{{group.id}}">
+        {{group.name}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

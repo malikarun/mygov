@@ -1,21 +1,23 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {
+.controller('ActivitiesCtrl', function($scope) {
 })
 
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
+.controller('GroupsCtrl', function($scope, Groups) {
+  $scope.groups = Groups.all();
 })
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
+.controller('GroupDetailCtrl', function($scope, $stateParams, Groups) {
+  $scope.group = Groups.get($stateParams.groupId);
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('DiscussCtrl', function($scope, Groups) {
+  $scope.groups = Groups.all();
 })
 
-.controller('GroupCtrl', function($scope) {
+.controller('TasksCtrl', function($scope, Groups) {
+  $scope.groups = Groups.all();
 })
 
-.controller('DiscussCtrl', function($scope) {
+.controller('SettingsCtrl', function($scope) {
 });
