@@ -3,30 +3,30 @@
   Each tab's child <ion-nav-view> directive will have its own
   navigation history that also transitions its views in and out.
 -->
-<ion-tabs class="tabs-icon-top">
+<ion-tabs class="tabs-icon-top tabs-balanced">
 
   <!-- Activities Tab -->
-  <ion-tab title="Activities" icon="icon ion-home" href="#/tab/activities">
+  <ion-tab title="Activities" icon-on="icon ion-ios7-home" icon-off="icon ion-ios7-home-outline" href="#/tab/activities">
     <ion-nav-view name="tab-activities"></ion-nav-view>
   </ion-tab>
 
   <!-- Discuss Tab -->
-  <ion-tab title="Discuss" icon="icon ion-chatbubble-working" href="#/tab/discuss">
+  <ion-tab title="Discuss" icon-on="icon ion-ios7-chatboxes" icon-off="icon ion-ios7-chatboxes-outline" href="#/tab/discuss">
     <ion-nav-view name="tab-discuss"></ion-nav-view>
   </ion-tab>
 
   <!-- Tasks Tab -->
-  <ion-tab title="Tasks" icon="icon ion-hammer" href="#/tab/tasks">
+  <ion-tab title="Tasks" icon-on="icon ion-ios7-cog" icon-off="icon ion-ios7-cog-outline" href="#/tab/tasks">
     <ion-nav-view name="tab-tasks"></ion-nav-view>
   </ion-tab>
 
   <!-- Groups Tab -->
-  <ion-tab title="Groups" icon="icon ion-heart" href="#/tab/groups">
+  <ion-tab title="Groups" icon-on="icon ion-ios7-people" icon-off="icon ion-ios7-people-outline" href="#/tab/groups">
     <ion-nav-view name="tab-groups"></ion-nav-view>
   </ion-tab>
 
   <!-- Settings Tab -->
-  <ion-tab title="Settings" icon="icon ion-gear-b" href="#/tab/settings">
+  <ion-tab title="Settings" icon-on="icon ion-ios7-gear" icon-off="icon ion-ios7-gear-outline" href="#/tab/settings">
     <ion-nav-view name="tab-settings"></ion-nav-view>
   </ion-tab>
 </ion-tabs>
