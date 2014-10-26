@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('mygov.controllers', [])
 
 .controller('ActivitiesCtrl', function($scope) {
 })
@@ -20,4 +20,4 @@ angular.module('starter.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope) {
-});
+})

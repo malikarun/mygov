@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('mygov.services', [])
 
 /**
  * A simple example service that returns some data.
@@ -28,4 +28,4 @@ angular.module('starter.services', [])
       return groups[groupId];
     }
   }
-});
+})

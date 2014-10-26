@@ -1,11 +1,16 @@
 'use strict';
 
-angular.module('enterprise.auth', ['ionic', 'ngCordova'])
+angular.module('mygov.auth', ['ionic', 'ngCordova'])
 
   .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');
 
     $stateProvider
+      .state('auth', {
+        url: "/auth",
+        templateUrl: "auth/auth.html"
+      })
+
       .state('login', {
         url: "/login",
         templateUrl: "auth/login.html",
@@ -21,19 +26,18 @@ angular.module('enterprise.auth', ['ionic', 'ngCordova'])
   )
 
   /********************** AuthCtrl (login, register, logout, handleErrors) *********************/
-  .controller('AuthCtrl', ['$scope', 'AuthFactory', function($scope, AuthFactory, $cordovaDialogs, $state) {
+  .controller('AuthCtrl', function($scope, $state, AuthFactory, $cordovaDialogs) {
     $scope.register = register;
     $scope.login = login;
 
     /********************** login action *********************/
-    function login(email, password) {
+    function login(identifier, password) {
       /********************** check if all fields were provided *********************/
       var all_fields_exists = fields_exist(arguments);
 
       /********************** Call AuthFactory if allfields provided *********************/
       if (all_fields_exists) {
-        AuthFactory.login(email, password).then(function success(response){
-          console.log(response.data);
+        AuthFactory.login(identifier, password).then(function success(response){
           $state.go('tabs.activities');
         }, handleError)
       }
@@ -43,14 +47,13 @@ angular.module('enterprise.auth', ['ionic', 'ngCordova'])
     };
 
     /********************** register action *********************/
-    function register(first_name, last_name, email, password) {
+    function register(first_name, last_name, username, email, password) {
       /********************** check if all fields were provided *********************/
       var all_fields_exists = fields_exist(arguments);
 
       /********************** Call AuthFactory if allfields provided *********************/
       if (all_fields_exists) {
-        AuthFactory.register(first_name, last_name, email, password).then(function success(response){
-          console.log(response.data);
+        AuthFactory.register(first_name, last_name, username, email, password).then(function success(response){
           $state.go('tabs.activities');
         }, handleError)
       }
@@ -91,73 +94,94 @@ angular.module('enterprise.auth', ['ionic', 'ngCordova'])
         alert('Error: ' + response.data.error);
       }
     };
-  }])
+  })
 
   /********************** API constant url *********************/
   .constant('API', 'http://localhost:1337')
 
   /********************** AuthFactory (login, register, logout) *********************/
-  .factory('AuthFactory', ['$http', 'API', 'AuthTokenFactory', function AuthFactory($http, API, AuthTokenFactory){
+  .factory('AuthFactory', function AuthFactory($http, API, AuthTokenFactory){
     return {
       login: login,
       register: register
     };
 
     /********************** login function *********************/
-    function login(email, password){
-      return $http.post(API + '/auths/login', {
-        email: email,
+    function login(identifier, password){
+      return $http.post(API + '/auth/local', {
+        identifier: identifier,
         password: password
-      }, {withCredentials: true}).then(function success(response){
+      }).then(function success(response){
         AuthTokenFactory.setToken(response.data.token);
+        AuthTokenFactory.setUser(response.data.user);
         return response;
       })
     };
 
     /********************** register function *********************/
-    function register(first_name, last_name, email, password){
-      return $http.post(API + '/users/create', {
+    function register(first_name, last_name, username, email, password){
+      return $http.post(API + '/auth/local/register', {
         first_name: first_name,
         last_name: last_name,
+        username: username,
         email: email,
         password: password
-      }, {withCredentials: true}).then(function success(response){
+      }).then(function success(response){
         AuthTokenFactory.setToken(response.data.token);
+        AuthTokenFactory.setUser(response.data.user);
         return response;
       })
     };
-  }])
+  })
 
   /********************** AuthTokenFactory (setToken, getToken) *********************/
-  .factory('AuthTokenFactory', ['$window', function AuthTokenFactory($window){
+  .factory('AuthTokenFactory', function AuthTokenFactory($window){
     /********* get the localStorage ***************/
     var store = $window.localStorage;
-    /********* define access_token key var ***************/
-    var key = 'access_token';
+    /********* define access_token_key var ***************/
+    var access_token_key = 'access_token';
+    var user_key = 'current_user';
     return {
       setToken: setToken,
-      getToken: getToken
+      getToken: getToken,
+      setUser: setUser,
+      loggedIn: loggedIn
     };
 
     /********************** setToken function *********************/
     function setToken(token){
-      // if token is provided set  the key else remove it
+      // if token is provided set  the access_token_key else remove it
       if (token) {
-        store.setItem(key, token);
+        store.setItem(access_token_key, token);
       }
       else {
-        store.removeItem(key);
+        store.removeItem(access_token_key);
       }
     };
 
     /********************** getToken function *********************/
     function getToken(){
-      return store.getItem(key);
+      return store.getItem(access_token_key);
     };
-  }])
+
+    /********************** setUser function *********************/
+    function setUser(user) {
+       if (user) {
+         store.setItem(user_key, user);
+       }
+       else {
+         store.removeItem(user_key);
+       }
+    };
+
+    /********************** setUser function *********************/
+    function loggedIn() {
+       return store.getItem(user_key) != null
+    }
+  })
 
   /********************** AuthInterceptor (setToken, getToken) *********************/
-  .factory('AuthInterceptor', ['AuthTokenFactory', function AuthInterceptor(AuthTokenFactory){
+  .factory('AuthInterceptor', function AuthInterceptor(AuthTokenFactory){
 
     return {
       request: addToken
@@ -168,8 +192,8 @@ angular.module('enterprise.auth', ['ionic', 'ngCordova'])
       var token = AuthTokenFactory.getToken();
       if (token) {
         config.headers = config.headers || {};
-        config.headers.access_token = token;
+        config.headers.Authorization = 'Bearer ' + token;
       }
       return config;
     };
-  }])
+  })
