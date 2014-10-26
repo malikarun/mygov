@@ -12,3 +12,4 @@ To run the project:
  6) run 'ionic plugin add org.apache.cordova.device'
  7) run 'ionic plugin add org.apache.cordova.console'
  8) run 'ionic plugin add https://github.com/driftyco/ionic-plugins-keyboard.git'
+ 9) run 'ionic emulate ios'
